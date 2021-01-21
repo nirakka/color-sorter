@@ -23,6 +23,8 @@ public class ClassificationController extends Thread {
 	private Timer timer;
 	private Alarm alarm;
 	
+	private boolean received=false;
+	
 	private Range[] WRange = new Range[] { new Range(50, 100) };
 	private ColorDef[] ColorDefs = new ColorDef[] { 
             new ColorDef(new Range(200, 300), new Range(0, 50), new Range(0, 50), 1), // red
@@ -65,28 +67,25 @@ public class ClassificationController extends Thread {
 			}
 		}
 	}
-	
-	private boolean received=false;
-	private boolean timeout=false;
-	
+		
 	public void rollout() {  
-		timer.setTimeout(100);
+		timer.setTimeout(10);
 		//addReq() 出荷要求送信
 		addReq();
 		
 		while(true) {
-			timer.inc();
 			//出荷完了通知を受け取るまで
-			timeout=timer.isTimeout();
-			
-			if (received) {
+			timer.inc();
+			if (timer.isTimeout()) {
+				System.out.println("timer: "+timer.counter);
+				alarm.on();
+				break;
+			} else if (received) {
 				System.out.println("timer: "+timer.counter);
 				timer.reset();
 				break;
-			}	else if (timeout) {
-				alarm.on();
-				break;
 			}
+			System.out.println("why this can't loop");
 		}
 
 		removeReq();

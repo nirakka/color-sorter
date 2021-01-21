@@ -1,13 +1,16 @@
 package controller;
 
+import boundary.Timer;
 import net.jini.space.JavaSpace;
 public class EjectController extends Thread {
 	//private Ejector[] ejectors= new Ejector[4];
 	private ClassificationController c;
+	private Timer timer;
 	public EjectController(ClassificationController c) {
 //		for(Ejector e: ejectors) {
 //			e = new Ejector();
 //		}
+		timer = new Timer();
 		this.c = c;
 	};
 
@@ -20,7 +23,6 @@ public class EjectController extends Thread {
 				eject();
 			}
 		}
-		
 	}
 	
 	public void eject() {	
@@ -28,9 +30,16 @@ public class EjectController extends Thread {
 //		ejectors[lane].eject();
 		System.out.println("Ejected!");
 		
-		try {  
-			Thread.sleep(500);
-		}catch (InterruptedException e){}
+//		try {
+//			Thread.sleep(20);
+//		}catch (InterruptedException e){}
+		/*
+		 * classify setTimeout(10) = eject setTimeout(10*1000)
+		 */
+		timer.setTimeout(10*1000);
+		System.out.println("eject timer: "+timer.counter);
+		while (!timer.isTimeout()) timer.inc();
+		System.out.println("eject timer: "+timer.counter);
 		c.response();
 	}
 
