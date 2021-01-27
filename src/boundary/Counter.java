@@ -16,6 +16,10 @@ public class Counter {
 		if (k<value.length) value[k]++;
 	}
 	
+	public void setCounter(int[] cnt) {
+		this.value = cnt;
+	}
+	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		

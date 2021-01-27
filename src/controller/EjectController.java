@@ -6,6 +6,7 @@ public class EjectController extends Thread {
 	//private Ejector[] ejectors= new Ejector[4];
 	private ClassificationController c;
 	private Timer timer;
+	public int t2=10;
 	public EjectController(ClassificationController c) {
 //		for(Ejector e: ejectors) {
 //			e = new Ejector();
@@ -13,6 +14,8 @@ public class EjectController extends Thread {
 		timer = new Timer();
 		this.c = c;
 	};
+	
+	public void setTimeout(int t) {this.t2 = t;}
 
 	public void run() {
 		while(true) {
@@ -36,7 +39,10 @@ public class EjectController extends Thread {
 		/*
 		 * classify setTimeout(10) = eject setTimeout(10*1000)
 		 */
-		timer.setTimeout(10*1000);
+		//timer.setTimeout(10*1000); // timeout
+		//timer.setTimeout(5*1000);	 // no timeout
+		//t2=10*1000;
+		timer.setTimeout(t2);
 		System.out.println("eject timer: "+timer.counter);
 		while (!timer.isTimeout()) timer.inc();
 		System.out.println("eject timer: "+timer.counter);

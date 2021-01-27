@@ -11,10 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import controller.ClassificationController;
+import controller.EjectController;
 
-public class ShipTest {
+public class RolloutTest {
 	ClassificationController c;
-	
+	EjectController e;
 	@BeforeEach
 	void beforeEachTest(TestInfo testInfo) {
 		System.out.printf("[%s.%s]\n", 
@@ -28,28 +29,33 @@ public class ShipTest {
 	@AfterEach
 	public void after() {
 		System.out.println();
+
 	}
 
 
 	private void setup() {
 		c = new ClassificationController();
+		e = new EjectController(c);
+		e.start();
 	}
 	
 	@Test
 	public void testNormal() {
 		//c.setProductPool(products1);
-		c.classify();
+		c.setTimeout(10000);
+		e.setTimeout(0);
+		c.setCounter(new int[] {0, 6, 0, 0});
 		c.rollout();
-		assertTrue(true /* レーン1が出荷される */);
+		assertTrue(!c.getAlarmCond() /* レーン1が出荷される */);
 	}
 	
 	@Test
 	public void testTimeout() {
-		c.classify();
-		//c.setTimeout(true);
-		
+		c.setTimeout(10);
+		e.setTimeout(10000000);
+		c.setCounter(new int[] {0, 6, 0, 0});
 		c.rollout();
-		assertTrue(true /* どのレーンも出荷されない */);
-		assertTrue(true /* 異常発生通知装置on  */);
+		assertTrue(c.getAlarmCond() /* レーン1が出荷される */);
+		c.setCond(false);
 	}
 }

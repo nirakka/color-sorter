@@ -25,6 +25,7 @@ public class ClassificationController extends Thread {
 	
 	private boolean received=false;
 	
+	public  int t1 = 10;
 	private Range[] WRange = new Range[] { new Range(50, 100) };
 	private ColorDef[] ColorDefs = new ColorDef[] { 
             new ColorDef(new Range(200, 300), new Range(0, 50), new Range(0, 50), 1), // red
@@ -32,7 +33,6 @@ public class ClassificationController extends Thread {
             new ColorDef(new Range(0, 50), new Range(0, 50), new Range(200, 300), 3), // blue
 	};
 	
-	// 数字に意味はない
 	private Product[] products1 = new Product[] {
 			new Product( 30, new RGB(100, 100, 100)),
 			new Product( 50, new RGB(200, 200, 200)),
@@ -69,7 +69,7 @@ public class ClassificationController extends Thread {
 	}
 		
 	public void rollout() {  
-		timer.setTimeout(10);
+		timer.setTimeout(t1);
 		//addReq() 出荷要求送信
 		addReq();
 		
@@ -94,6 +94,11 @@ public class ClassificationController extends Thread {
 		System.out.println("Product: " + pool.getProduct());
 
 	}
+	
+	public void setTimeout(int t) {this.t1 = t;}
+	public boolean getAlarmCond() {return alarm.getCond();}
+	public void setCounter(int [] cnt) {counter.setCounter(cnt);}
+	public void setCond(boolean b) {alarm.setCond(b);}
 
 	private void removeReq() {
 		System.out.println("removereq called");
