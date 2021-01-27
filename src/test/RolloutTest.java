@@ -22,7 +22,7 @@ public class RolloutTest {
 			testInfo.getTestClass().orElse(getClass()),
 			testInfo.getDisplayName()
 		);
-		
+
 		setup();
 	}
 
@@ -37,25 +37,62 @@ public class RolloutTest {
 		c = new ClassificationController();
 		e = new EjectController(c);
 		e.start();
+		c.setCounter(new int[] {0, 6, 0, 0});
+	}
+	
+	class DelayParam{
+		public DelayParam(int i, int j) {
+			cl = i;
+			sh = j;
+		}
+		int cl;
+		int sh;
+		
+	};
+	
+	
+	
+	DelayParam[] param00 = new DelayParam[] {
+			new DelayParam(0,0),
+			new DelayParam(10000, 0),
+			new DelayParam(1000000, 0),
+			new DelayParam(10,   1000000),
+			new DelayParam(100000, 100000),
+	};
+	
+	boolean[] results00 = new boolean[] {
+			false,
+			false,
+			false,
+			true,
+			false,
+	};
+	
+	private void testrolloutX(int k) {
+		c.setTimeout(param00[k].cl);
+		e.setTimeout(param00[k].sh);
+		
+		c.rollout();
+		assertTrue(c.getAlarmCond() == results00[k]);
 	}
 	
 	@Test
-	public void testNormal() {
-		//c.setProductPool(products1);
-		c.setTimeout(10000);
-		e.setTimeout(0);
-		c.setCounter(new int[] {0, 6, 0, 0});
-		c.rollout();
-		assertTrue(!c.getAlarmCond() /* レーン1が出荷される */);
+	public void testrollout01() {
+		testrolloutX(1);
 	}
 	
 	@Test
-	public void testTimeout() {
-		c.setTimeout(10);
-		e.setTimeout(10000000);
-		c.setCounter(new int[] {0, 6, 0, 0});
-		c.rollout();
-		assertTrue(c.getAlarmCond() /* レーン1が出荷される */);
-		c.setCond(false);
+	public void testrollout02() {
+		testrolloutX(2);
+	}
+	
+	@Test
+	public void testrollout03() {
+		testrolloutX(3);
+	}
+	
+	@Test
+	public void testrollout04() {
+		testrolloutX(4);
 	}
 }
